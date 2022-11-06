@@ -1,6 +1,8 @@
 ﻿using CustomerPortal.DTO.CountryModule;
 using CustomerPortal.DTO.CustomerModule;
+using CustomerPortal.Helper;
 using CustomerPortal.Repository.CountryModule;
+using CustomerPortal.Repository.CustomerModule;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -12,10 +14,10 @@ namespace CustomerPortal.Controllers
 
     public class CustomersController : ControllerBase
     {
-        private readonly ICountryRepository countryRepository;
-        public CustomersController(ICountryRepository countryRepository)
+        private readonly ICustomerRepository customerRepository;
+        public CustomersController(ICustomerRepository customerRepository)
         {
-            this.countryRepository = countryRepository;
+            this.customerRepository = customerRepository;
         }
 
         [HttpGet]
@@ -23,7 +25,7 @@ namespace CustomerPortal.Controllers
         {
             try
             {
-                var countries = await countryRepository.GetAll();
+                var countries = await customerRepository.GetAll();
 
                 if (countries == null)
                 {
@@ -51,15 +53,15 @@ namespace CustomerPortal.Controllers
         //}
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CountryDTO countryDTO)
+        public async Task<IActionResult> Post([FromBody] CustomerDTO customerDTO)
         {
             try
             {
-                bool isDependantExist = await countryRepository.CheckIfMemberExist(countryDTO);
+                bool isDependantExist = await customerRepository.CheckIfMemberExist(customerDTO);
 
                 if (isDependantExist == false)
                 {
-                    var result = await countryRepository.Create(countryDTO);
+                    var result = await customerRepository.Create(customerDTO);
 
                     if (result != null)
                     {
@@ -94,7 +96,7 @@ namespace CustomerPortal.Controllers
         public async Task<IActionResult> Delete(int Id)
 
         {
-            var delete = await countryRepository.Delete(Id);
+            var delete = await customerRepository.Delete(Id);
 
             if (delete == true)
             {
@@ -104,5 +106,50 @@ namespace CustomerPortal.Controllers
 
 
         }
+
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> UploadFileAsync([FromForm] CustomerDTO customerDTO)
+        {
+
+            try
+            {
+
+                if (customerDTO.file.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        customerDTO.file.CopyTo(ms);
+
+                        var fileBytes = ms.ToArray();
+
+                        customerDTO.CustomerPhoto = fileBytes;
+                    }
+
+                    var result = await customerRepository.Create(customerDTO);
+
+                    if (result != null)
+                    {
+                        return Ok("Customer has been successfully created");
+                    }
+
+                    return BadRequest($"Unable to create customer");
+                }
+
+                return BadRequest($"Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return null;
+            }
+
+        }
+
+
+
+
     }
 }

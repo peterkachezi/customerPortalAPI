@@ -1,4 +1,5 @@
-﻿using CustomerPortal.DTO.CustomerModule;
+﻿using CustomerPortal.DTO.CountryModule;
+using CustomerPortal.DTO.CustomerModule;
 
 namespace CustomerPortal.Repository.CustomerModule
 {
@@ -7,5 +8,7 @@ namespace CustomerPortal.Repository.CustomerModule
         Task<CustomerDTO> Create(CustomerDTO customerDTO);
         Task<bool> Delete(int Id);
         Task<List<CustomerDTO>> GetAll();
+        Task<bool> CheckIfMemberExist(CustomerDTO customerDTO);
+
     }
 }

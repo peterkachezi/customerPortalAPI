@@ -19,15 +19,15 @@ namespace CustomerPortal.DAL.ContextContext
 
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
-        public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; } = null!;        
+        public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasOne(d => d.CustomerNavigation)
+                entity.HasOne(d => d.Country)
                     .WithMany(p => p.Customers)
-                    .HasForeignKey(d => d.CustomerId)
+                    .HasForeignKey(d => d.CountryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Customers_Countries");
             });
@@ -43,6 +43,7 @@ namespace CustomerPortal.DAL.ContextContext
 
             OnModelCreatingPartial(modelBuilder);
         }
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

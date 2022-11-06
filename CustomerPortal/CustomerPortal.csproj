@@ -24,4 +24,8 @@
     <ProjectReference Include="..\CustomerPortal.Repository\CustomerPortal.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+
 </Project>

@@ -68,7 +68,7 @@ namespace CustomerPortal.Controllers
 
                     }
                 }
-                return BadRequest($"Something went wrong");
+                return BadRequest($"Country exits");
 
             }
             catch (Exception ex)

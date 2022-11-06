@@ -21,6 +21,22 @@ namespace CustomerPortal.Repository.CustomerModule
             this.mapper = mapper;
         }
 
+        public async Task<bool> CheckIfMemberExist(CustomerDTO customerDTO)
+        {
+            try
+            {
+                bool result = await context.Customers.AnyAsync(p => p.CustomerName == customerDTO.CustomerName);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return false;
+            }
+        }
+
         public async Task<CustomerDTO> Create(CustomerDTO customerDTO)
         {
             try
